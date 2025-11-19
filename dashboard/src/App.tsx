@@ -1,11 +1,13 @@
+import { useState } from "react"
+import Routers from './router/Routers';
+import type { RouteObject } from "react-router-dom";
+import publicRoutes from "./router/PublicRoutes";
+
 const App = () => {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </div>
-  )
+  const [allRoutes, setAllRoutes] = useState<RouteObject[]>(publicRoutes);
+
+
+  return <Routers allRoutes={allRoutes} />
 }
 
-export default App
+export default App;

@@ -1,9 +1,10 @@
-import { FaFacebook, FaGoogle } from "react-icons/fa"
-import { Link } from "react-router-dom"
 import UserInput from "../../components/UI/UserInput"
 import { useRef, useState } from "react";
 import type { User } from "../../models/User";
 import type { ErrorState } from "../../models/UserErrorState";
+import LogoImage from '../../../public/logo.svg';
+import { adminLogin } from "../../store/reducers/authSlice";
+import { useAppDispatch } from "../../store/hooks";
 
 const initialError: ErrorState = {
     name: "",
@@ -13,11 +14,18 @@ const initialError: ErrorState = {
     policyAccepted: "",
 };
 
-const initialData = { name: "", email: "", password: "", confirmpassword: "", policyAccepted: false };
+const initialData = {
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    policyAccepted: false
+};
 
-const Login = () => {
+const AdminLogin = () => {
     const [formData, setFormData] = useState<User>(initialData);
     const [error, setError] = useState<ErrorState>(initialError);
+    const dispatch = useAppDispatch();
 
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -30,7 +38,9 @@ const Login = () => {
 
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
-        if (!isValid()) return
+        if (!isValid()) return;
+
+        dispatch(adminLogin({ email: formData.email, password: formData.password }));
         console.log(formData, 'form submitted!!!');
     }
 
@@ -57,39 +67,18 @@ const Login = () => {
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
             <div className="md:w-[500px] sm:[350px] bg-blue-500 text-white sm:2 md:p-4">
-                <h2 className="text-xl mb-2 font-bold">Welcome to Ecommerce</h2>
-                <p className="text-sm mb-3 font-medium">Please Sign In your account</p>
+                <div className="w-[100px] h-[100px] mx-auto">
+                    <img src={LogoImage} alt="Logo" className="h-full w-full" />
+                </div>
 
                 <form onSubmit={onSubmitHandler}>
                     <UserInput label="Email" type="email" name="email" placeholder="Enter your email" value={formData.email} error={error.email} onChange={onChangeHandler} inputRef={emailRef} />
                     <UserInput label="Password" type="password" name="password" placeholder="Enter your password" value={formData.password} error={error.password} onChange={onChangeHandler} inputRef={passwordRef} />
-                    <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">Sign In</button>
-
-                    <div className='flex items-center mb-3 gap-3 justify-center'>
-                        <p>Don't Have an account ? <Link className='font-bold' to="/register">Sing Up</Link> </p>
-                    </div>
-
-                    <div className='w-full flex justify-center items-center mb-3'>
-                        <div className='w-[45%] bg-amber-50 h-px'></div>
-                        <div className='w-[10%] flex justify-center items-center'>
-                            <span className='pb-1'>Or</span>
-                        </div>
-                        <div className='w-[45%] bg-amber-50 h-px'></div>
-                    </div>
-
-                    <div className='flex justify-center items-center gap-3'>
-                        <div className='w-[135px] h-[35px] flex rounded-md bg-orange-700 shadow-lg hover:shadow-orange-700/50 justify-center cursor-pointer items-center overflow-hidden'>
-                            <span><FaGoogle /></span>
-                        </div>
-
-                        <div className='w-[135px] h-[35px] flex rounded-md bg-blue-700 shadow-lg hover:shadow-blue-700/50 justify-center cursor-pointer items-center overflow-hidden'>
-                            <span><FaFacebook /></span>
-                        </div>
-                    </div>
+                    <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">Login</button>
                 </form>
             </div>
         </div>
     )
 }
 
-export default Login
+export default AdminLogin

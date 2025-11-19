@@ -1,36 +1,90 @@
-import { FaFacebook, FaGoogle } from "react-icons/fa"
+import React, { useRef, useState } from "react"
 import { Link } from "react-router-dom"
+import { FaFacebook, FaGoogle } from "react-icons/fa"
+import type { User } from "../../models/User";
+import type { ErrorState } from "../../models/UserErrorState";
+import UserInput from "../../components/UI/UserInput";
+
+const initialError: ErrorState = {
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    policyAccepted: "",
+};
+
+const initialData = { name: "", email: "", password: "", confirmpassword: "", policyAccepted: false };
 
 const Register = () => {
+    const [formData, setFormData] = useState<User>(initialData);
+    const [error, setError] = useState<ErrorState>(initialError);
+
+    const nameRef = useRef<HTMLInputElement | null>(null);
+    const emailRef = useRef<HTMLInputElement | null>(null);
+    const passwordRef = useRef<HTMLInputElement | null>(null);
+    const confirmPasswordRef = useRef<HTMLInputElement | null>(null);
+    const policyAcceptedRef = useRef<HTMLInputElement | null>(null);
+
+    const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        const { name, type, value, checked } = event.target;
+
+        setFormData((prevState) => ({ ...prevState, [name]: type === "checkbox" ? checked : value }))
+    }
+
+    const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        if (!isValid()) return
+        console.log(formData, 'form submitted!!!');
+    }
+
+    const isValid = () => {
+        let isValid: boolean = true;
+        const name = formData.name.trim();
+        const email = formData.email.trim();
+        const password = formData.password.trim();
+        const confirmpassword = formData.confirmpassword.trim();
+        const policyAccepted = formData.policyAccepted;
+
+        setError(initialError);
+
+        if (name === "" || name.length < 3) {
+            setError((prevState) => ({ ...prevState, name: "Enter valid name" }));
+            nameRef.current?.focus();
+            isValid = false;
+        } else if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
+            setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
+            emailRef.current?.focus();
+            isValid = false;
+        } else if (password === "" || password.length < 5) {
+            setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
+            passwordRef.current?.focus();
+            isValid = false;
+        } else if (confirmpassword === "" || confirmpassword !== password) {
+            setError((prevState) => ({ ...prevState, confirmpassword: "Password and Confirm password not match" }));
+            confirmPasswordRef.current?.focus();
+            isValid = false;
+        } else if (!policyAccepted) {
+            setError((prevState) => ({ ...prevState, policyAccepted: "Please agree privacy policy and terms", }));
+            policyAcceptedRef.current?.focus();
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
             <div className="md:w-[500px] sm:[350px] bg-blue-500 text-white sm:2 md:p-4">
                 <h2 className="text-xl mb-2 font-bold">Welcome to Ecommerce</h2>
                 <p className="text-sm mb-3 font-medium">Please register your account</p>
 
-                <form>
-                    <div className='flex flex-col w-full gap-1 mb-3'>
-                        <label htmlFor="name">Name</label>
-                        <input className='px-3 py-2 outline-none border border-blue-400 bg-transparent rounded-md' type="text" name='name' placeholder='Name' id='name' required />
+                <form onSubmit={onSubmitHandler}>
 
-                    </div>
-
-
-                    <div className='flex flex-col w-full gap-1 mb-3'>
-                        <label htmlFor="email">Email</label>
-                        <input className='px-3 py-2 outline-none border border-blue-400 bg-transparent rounded-md' type="email" name='email' placeholder='Email' id='email' required />
-
-                    </div>
-
-                    <div className='flex flex-col w-full gap-1 mb-3'>
-                        <label htmlFor="password">Password</label>
-                        <input className='px-3 py-2 outline-none border border-blue-400 bg-transparent rounded-md' type="password" name='password' placeholder='Password' id='password' required />
-                    </div>
-
-                    <div className='flex items-center w-full gap-3 mb-3'>
-                        <input className='w-4 h-4 text-blue-600 overflow-hidden border border-blue-400 rounded focus:ring-amber-50' type="checkbox" name="checkbox" id="checkbox" />
-                        <label htmlFor="checkbox"> I agree to privacy policy & treams</label>
-                    </div>
+                    <UserInput label="Name" name="name" placeholder="Enter your name" value={formData.name} error={error.name} onChange={onChangeHandler} inputRef={nameRef} />
+                    <UserInput label="Email" type="email" name="email" placeholder="Enter your email" value={formData.email} error={error.email} onChange={onChangeHandler} inputRef={emailRef} />
+                    <UserInput label="Password" type="password" name="password" placeholder="Enter your password" value={formData.password} error={error.password} onChange={onChangeHandler} inputRef={passwordRef} />
+                    <UserInput label="Confirm Password" type="password" name="confirmpassword" placeholder="Confirm your password" value={formData.confirmpassword} error={error.confirmpassword} onChange={onChangeHandler} inputRef={confirmPasswordRef} />
+                    <UserInput label="I agree to privacy policy & terms" type="checkbox" name="policyAccepted" value={formData.policyAccepted} error={error.policyAccepted} onChange={onChangeHandler} inputRef={policyAcceptedRef} />
 
                     <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3'>Sign Up</button>
 
@@ -50,14 +104,10 @@ const Register = () => {
                         <div className='w-[135px] h-[35px] flex rounded-md bg-orange-700 shadow-lg hover:shadow-orange-700/50 justify-center cursor-pointer items-center overflow-hidden'>
                             <span><FaGoogle /></span>
                         </div>
-
                         <div className='w-[135px] h-[35px] flex rounded-md bg-blue-700 shadow-lg hover:shadow-blue-700/50 justify-center cursor-pointer items-center overflow-hidden'>
                             <span><FaFacebook /></span>
                         </div>
-
                     </div>
-
-
                 </form>
             </div>
         </div>

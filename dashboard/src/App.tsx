@@ -4,7 +4,7 @@ import type { RouteObject } from "react-router-dom";
 import publicRoutes from "./router/PublicRoutes";
 
 const App = () => {
-  const [allRoutes, setAllRoutes] = useState<RouteObject[]>(publicRoutes);
+  const [allRoutes] = useState<RouteObject[]>(publicRoutes);
 
 
   return <Routers allRoutes={allRoutes} />

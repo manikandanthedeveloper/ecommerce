@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
@@ -7,6 +7,7 @@ import { adminLogin, messageClear } from "../../store/reducers/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { PropagateLoader } from "react-spinners";
 import LogoImage from '../../../public/logo.svg';
+import { useNavigate } from "react-router-dom";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -22,14 +23,21 @@ const AdminLogin = () => {
     const [formData, setFormData] = useState<Login>(initialData);
     const [error, setError] = useState<LoginErrorState>(initialError);
     const dispatch = useAppDispatch();
-    const { loader, errorMessage } = useAppSelector((state) => state.auth);
-
+    const { loader, errorMessage, isAuthenticated, successMessage } = useAppSelector((state) => state.auth);
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
+    const overideStyle = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "0 auto",
+        height: "24px"
+    }
+    const navigate = useNavigate();
 
     const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const { name, type, value, checked } = event.target;
-
+        dispatch(messageClear());
         setFormData((prevState) => ({ ...prevState, [name]: type === "checkbox" ? checked : value }))
     }
 
@@ -38,6 +46,7 @@ const AdminLogin = () => {
         if (!isValid()) return;
 
         dispatch(adminLogin({ email: formData.email, password: formData.password }));
+        setFormData(initialData);
     }
 
     const isValid = () => {
@@ -60,32 +69,23 @@ const AdminLogin = () => {
         return isValid;
     }
 
-    const overideStyle = {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: "0 auto",
-        height: "24px"
-    }
+    useMemo(() => {
+        if (!errorMessage && !successMessage) return;
 
-    useEffect(() => {
         if (errorMessage) {
-            const lowerErrorMessage = errorMessage.toLowerCase();
-            const newError = { ...initialError };
-
-            if (lowerErrorMessage.includes("email")) {
-                newError.email = errorMessage;
-                setError(newError);
-                emailRef.current?.focus();
-            } else if (lowerErrorMessage.includes("password")) {
-                newError.password = errorMessage;
-                setError(newError);
-                passwordRef.current?.focus();
-            }
             toast.error(errorMessage);
-            dispatch(messageClear());
         }
-    }, [errorMessage, dispatch]);
+
+        if (isAuthenticated && successMessage) {
+            toast.success(successMessage || "Login successful");
+            navigate('/');
+        }
+    }, [
+        errorMessage,
+        isAuthenticated,
+        successMessage,
+        navigate
+    ]);
 
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>

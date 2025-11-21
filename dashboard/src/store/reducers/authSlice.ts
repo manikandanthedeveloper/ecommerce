@@ -14,8 +14,16 @@ export const adminLogin = createAsyncThunk(
 				headers: { "Content-Type": "application/json" },
 			});
 
-			if (data.token) {
-				return fulfillWithValue(data);
+			const token = data.token || data.data?.token;
+			if (token) {
+				return fulfillWithValue({
+					token,
+					user: data.user || data.data?.user || null,
+					successMessage:
+						data.message ||
+						data.data?.message ||
+						"Login successful",
+				});
 			} else {
 				return rejectWithValue(data.message || "Login failed");
 			}
@@ -38,6 +46,7 @@ export const authSlice = createSlice({
 		user: null,
 		token: null,
 		errorMessage: null as string | null,
+		successMessage: null as string | null,
 		loader: false,
 	},
 	reducers: {
@@ -46,6 +55,7 @@ export const authSlice = createSlice({
 			state.user = action.payload.user;
 			state.token = action.payload.token;
 			state.errorMessage = null;
+			state.successMessage = action.payload.successMessage || null;
 		},
 		loginFailure: (state, action) => {
 			state.isAuthenticated = false;
@@ -61,6 +71,7 @@ export const authSlice = createSlice({
 		},
 		messageClear: (state) => {
 			state.errorMessage = null;
+			state.successMessage = null;
 		},
 	},
 	extraReducers: (builder) => {
@@ -74,6 +85,7 @@ export const authSlice = createSlice({
 				state.isAuthenticated = true;
 				state.token = action.payload.token;
 				state.errorMessage = null;
+				state.successMessage = action.payload.successMessage;
 			})
 			.addCase(adminLogin.rejected, (state, action) => {
 				state.loader = false;

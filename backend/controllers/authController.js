@@ -14,7 +14,10 @@ class authController {
 					user.password
 				);
 				if (isPasswordValid) {
-					const token = await createToken(user);
+					const token = await createToken({
+						id: user._id,
+						role: user.role,
+					});
 					res.cookie("accessToken", token, {
 						httpOnly: true,
 						secure: true,
@@ -27,6 +30,31 @@ class authController {
 				}
 			} else {
 				return responseError(res, "User not found", 404);
+			}
+		} catch (err) {
+			return responseError(res, "Server error", 500);
+		}
+	};
+
+	getUser = async (req, res, next) => {
+		const { id, role } = req;
+		try {
+			if (role === "admin") {
+				const user = await User.findById(id).select("-password");
+				if (user) {
+					return responseSuccess(res, { user }, 200);
+				} else {
+					return responseError(res, "User not found", 404);
+				}
+			} else if (role === "seller") {
+				const user = await User.findById(id).select("-password");
+				if (user) {
+					return responseSuccess(res, { user }, 200);
+				} else {
+					return responseError(res, "User not found", 404);
+				}
+			} else {
+				return responseError(res, "Unauthorized access", 403);
 			}
 		} catch (err) {
 			return responseError(res, "Server error", 500);

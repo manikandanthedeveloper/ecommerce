@@ -1,30 +1,24 @@
 import UserInput from "../../components/UI/UserInput"
 import { useRef, useState } from "react";
-import type { User } from "../../models/User";
-import type { ErrorState } from "../../models/UserErrorState";
+import type { Login } from "../../models/Login";
+import type { LoginErrorState } from "../../models/LoginErrorState";
 import LogoImage from '../../../public/logo.svg';
 import { adminLogin } from "../../store/reducers/authSlice";
 import { useAppDispatch } from "../../store/hooks";
 
-const initialError: ErrorState = {
-    name: "",
+const initialError: LoginErrorState = {
     email: "",
-    password: "",
-    confirmpassword: "",
-    policyAccepted: "",
+    password: ""
 };
 
 const initialData = {
-    name: "",
     email: "",
-    password: "",
-    confirmpassword: "",
-    policyAccepted: false
+    password: ""
 };
 
 const AdminLogin = () => {
-    const [formData, setFormData] = useState<User>(initialData);
-    const [error, setError] = useState<ErrorState>(initialError);
+    const [formData, setFormData] = useState<Login>(initialData);
+    const [error, setError] = useState<LoginErrorState>(initialError);
     const dispatch = useAppDispatch();
 
     const emailRef = useRef<HTMLInputElement | null>(null);

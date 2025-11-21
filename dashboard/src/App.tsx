@@ -1,11 +1,14 @@
-import { useState } from "react"
+import { useMemo } from "react"
 import Routers from './router/Routers';
-import type { RouteObject } from "react-router-dom";
 import publicRoutes from "./router/PublicRoutes";
+import { getRoutes } from "./router"
 
 const App = () => {
-  const [allRoutes] = useState<RouteObject[]>(publicRoutes);
+  const allRoutes = useMemo(() => {
+    const routes = getRoutes();
 
+    return [...publicRoutes, routes];
+  }, []);
 
   return <Routers allRoutes={allRoutes} />
 }

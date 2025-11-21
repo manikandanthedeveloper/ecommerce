@@ -1,0 +1,62 @@
+import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import type { MenuItem } from '../models/MenuItem'
+import { MdChevronRight, MdChevronLeft } from 'react-icons/md'
+import { getNavs } from '../navigation';
+import Navigation from './Navigation';
+import Footer from './UI/Footer';
+
+const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>> }> = ({ isCollapsed, setIsCollapsed }) => {
+    const location = useLocation()
+    const [menuItems] = useState<MenuItem[]>(() => getNavs('admin'));
+
+    const isActive = (path: string) => {
+        return location.pathname === path || location.pathname.startsWith(path + '/')
+    }
+
+    return (
+        <>
+            {/* Sidebar */}
+            <aside
+                className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-[56px] md:mt-0 bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-0 md:w-16' : 'w-64'
+                    } border-r border-gray-200`}
+            >
+                {/* Collapse Toggle Button */}
+                <button
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className="absolute -right-3 top-4 bg-blue-600 text-white rounded-full p-1 shadow-md hover:bg-blue-700 transition-colors hidden md:block"
+                >
+                    {isCollapsed ? (
+                        <MdChevronRight className="text-lg" />
+                    ) : (
+                        <MdChevronLeft className="text-lg" />
+                    )}
+                </button>
+
+                {/* Sidebar Content */}
+                <div className="flex flex-col h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <nav className="flex-1 px-2 py-4 space-y-1">
+                        {menuItems.map((item) => (
+                            <div key={item.title}>
+                                <Navigation item={item} isCollapsed={isCollapsed} isActive={isActive} />
+                            </div>
+                        ))}
+                    </nav>
+
+                    {/* Sidebar Footer */}
+                    {!isCollapsed && (
+                        <Footer />
+                    )}
+                </div>
+            </aside>
+
+            {/* Mobile Overlay */}
+            <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                style={{ display: 'none' }}
+            />
+        </>
+    )
+}
+
+export default Sidebar

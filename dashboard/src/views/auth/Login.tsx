@@ -4,6 +4,8 @@ import UserInput from "../../components/UI/UserInput"
 import { useRef, useState } from "react";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
+import { adminLogin } from "../../store/reducers/authSlice";
+import { useAppDispatch } from "../../store/hooks";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -15,6 +17,7 @@ const initialData = { email: "", password: "" };
 const Login = () => {
     const [formData, setFormData] = useState<Login>(initialData);
     const [error, setError] = useState<LoginErrorState>(initialError);
+    const dispatch = useAppDispatch();
 
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -29,6 +32,8 @@ const Login = () => {
         event.preventDefault();
         if (!isValid()) return
         console.log(formData, 'form submitted!!!');
+        dispatch(adminLogin({ email: formData.email, password: formData.password }));
+        setFormData(initialData);
     }
 
     const isValid = () => {

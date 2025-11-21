@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import type { DecodedToken } from "../../models/DecodedToken";
 
 export const adminLogin = createAsyncThunk(
 	"auth/adminLogin",
@@ -39,33 +41,46 @@ export const adminLogin = createAsyncThunk(
 	}
 );
 
+const returnRole = (token: string | null): string => {
+	if (token) {
+		const decodeToken = jwtDecode<DecodedToken>(token);
+		const expireTime = new Date(decodeToken.exp * 1000);
+		if (new Date() > expireTime) {
+			localStorage.removeItem("accessToken");
+			return "";
+		} else {
+			return decodeToken.role;
+		}
+	} else {
+		return "";
+	}
+};
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState: {
 		isAuthenticated: false,
-		user: null,
-		token: null,
+		token: localStorage.getItem("accessToken") || null,
 		errorMessage: null as string | null,
 		successMessage: null as string | null,
 		loader: false,
+		role: returnRole(localStorage.getItem("accessToken")),
 	},
 	reducers: {
 		loginSuccess: (state, action) => {
 			state.isAuthenticated = true;
-			state.user = action.payload.user;
 			state.token = action.payload.token;
 			state.errorMessage = null;
 			state.successMessage = action.payload.successMessage || null;
+			state.role = action.payload.user?.role || null;
 		},
 		loginFailure: (state, action) => {
 			state.isAuthenticated = false;
-			state.user = null;
 			state.token = null;
 			state.errorMessage = action.payload.error;
 		},
 		logout: (state) => {
 			state.isAuthenticated = false;
-			state.user = null;
 			state.token = null;
 			state.errorMessage = null;
 		},
@@ -86,6 +101,7 @@ export const authSlice = createSlice({
 				state.token = action.payload.token;
 				state.errorMessage = null;
 				state.successMessage = action.payload.successMessage;
+				state.role = action.payload.user?.role || null;
 			})
 			.addCase(adminLogin.rejected, (state, action) => {
 				state.loader = false;

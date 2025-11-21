@@ -1,10 +1,12 @@
-import UserInput from "../../components/UI/UserInput"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
+import UserInput from "../../components/UI/UserInput"
+import { adminLogin, messageClear } from "../../store/reducers/authSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { PropagateLoader } from "react-spinners";
 import LogoImage from '../../../public/logo.svg';
-import { adminLogin } from "../../store/reducers/authSlice";
-import { useAppDispatch } from "../../store/hooks";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -20,6 +22,7 @@ const AdminLogin = () => {
     const [formData, setFormData] = useState<Login>(initialData);
     const [error, setError] = useState<LoginErrorState>(initialError);
     const dispatch = useAppDispatch();
+    const { loader, errorMessage } = useAppSelector((state) => state.auth);
 
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -35,7 +38,6 @@ const AdminLogin = () => {
         if (!isValid()) return;
 
         dispatch(adminLogin({ email: formData.email, password: formData.password }));
-        console.log(formData, 'form submitted!!!');
     }
 
     const isValid = () => {
@@ -58,6 +60,33 @@ const AdminLogin = () => {
         return isValid;
     }
 
+    const overideStyle = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "0 auto",
+        height: "24px"
+    }
+
+    useEffect(() => {
+        if (errorMessage) {
+            const lowerErrorMessage = errorMessage.toLowerCase();
+            const newError = { ...initialError };
+
+            if (lowerErrorMessage.includes("email")) {
+                newError.email = errorMessage;
+                setError(newError);
+                emailRef.current?.focus();
+            } else if (lowerErrorMessage.includes("password")) {
+                newError.password = errorMessage;
+                setError(newError);
+                passwordRef.current?.focus();
+            }
+            toast.error(errorMessage);
+            dispatch(messageClear());
+        }
+    }, [errorMessage, dispatch]);
+
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
             <div className="md:w-[500px] sm:[350px] bg-blue-500 text-white sm:2 md:p-4">
@@ -68,7 +97,7 @@ const AdminLogin = () => {
                 <form onSubmit={onSubmitHandler}>
                     <UserInput label="Email" type="email" name="email" placeholder="Enter your email" value={formData.email} error={error.email} onChange={onChangeHandler} inputRef={emailRef} />
                     <UserInput label="Password" type="password" name="password" placeholder="Enter your password" value={formData.password} error={error.password} onChange={onChangeHandler} inputRef={passwordRef} />
-                    <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">Login</button>
+                    <button disabled={loader} className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">{loader ? <PropagateLoader cssOverride={overideStyle} color="#ffffff" /> : "Login"}</button>
                 </form>
             </div>
         </div>

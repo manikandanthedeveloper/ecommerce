@@ -14,10 +14,7 @@ createRoot(document.getElementById('root')!).render(
       <App />
       <Toaster toastOptions={{
         position: "bottom-right",
-        style: {
-          backgroundColor: "#ffffff",
-          color: "#000000"
-        }
+        className: 'text-sm bg-gray-800 text-white shadow-lg',
       }} />
     </BrowserRouter>
   </Provider>,

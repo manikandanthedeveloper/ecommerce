@@ -37,7 +37,7 @@ export const authSlice = createSlice({
 		isAuthenticated: false,
 		user: null,
 		token: null,
-		error: null as string | null,
+		errorMessage: null as string | null,
 		loader: false,
 	},
 	reducers: {
@@ -45,40 +45,45 @@ export const authSlice = createSlice({
 			state.isAuthenticated = true;
 			state.user = action.payload.user;
 			state.token = action.payload.token;
-			state.error = null;
+			state.errorMessage = null;
 		},
 		loginFailure: (state, action) => {
 			state.isAuthenticated = false;
 			state.user = null;
 			state.token = null;
-			state.error = action.payload.error;
+			state.errorMessage = action.payload.error;
 		},
 		logout: (state) => {
 			state.isAuthenticated = false;
 			state.user = null;
 			state.token = null;
-			state.error = null;
+			state.errorMessage = null;
+		},
+		messageClear: (state) => {
+			state.errorMessage = null;
 		},
 	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(adminLogin.pending, (state) => {
 				state.loader = true;
-				state.error = null;
+				state.errorMessage = null;
 			})
 			.addCase(adminLogin.fulfilled, (state, action) => {
 				state.loader = false;
 				state.isAuthenticated = true;
 				state.token = action.payload.token;
-				state.error = null;
+				state.errorMessage = null;
 			})
 			.addCase(adminLogin.rejected, (state, action) => {
 				state.loader = false;
 				state.isAuthenticated = false;
 				state.token = null;
-				state.error = (action.payload as string) || "Login failed";
+				state.errorMessage =
+					(action.payload as string) || "Login failed";
 			});
 	},
 });
 export default authSlice.reducer;
-export const { loginSuccess, loginFailure, logout } = authSlice.actions;
+export const { loginSuccess, loginFailure, logout, messageClear } =
+	authSlice.actions;

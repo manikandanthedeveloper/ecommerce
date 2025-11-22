@@ -7,7 +7,7 @@ const RecentOrders = () => {
             <Link to={'/'} className='font-semibold text-sm text-black'>View All</Link>
         </div>
 
-        <div className='relative overflow-x-auto bg-white border border-gray-200 mt-4'>
+        <div className='relative overflow-x-auto bg-white border border-gray-200 border-b-0 mt-4'>
             <table className='w-full text-sm text-left text-black'>
                 <thead className='text-sm text-black uppercase border-b border-gray-200'>
                     <tr>
@@ -21,7 +21,7 @@ const RecentOrders = () => {
 
                 <tbody>
                     {[1, 2, 3, 4, 5].map((_, i) => (
-                        <tr key={i}>
+                        <tr key={i} className="border-b border-gray-200">
                             <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>#34344</td>
                             <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>$454</td>
                             <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>Pending</td>
@@ -30,11 +30,8 @@ const RecentOrders = () => {
                         </tr>
                     ))}
                 </tbody>
-
             </table>
-
         </div>
-
     </div>
 }
 

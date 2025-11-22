@@ -6,7 +6,7 @@ import RecentSellerMessages from "../../components/RecentSellerMessages";
 import RecentOrders from "../../components/RecentOrders";
 
 const AdminDashboard = () => {
-	return <>
+	return (
 		<div className="px-2 md:px-7 py-5">
 			<h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -61,8 +61,7 @@ const AdminDashboard = () => {
 			</div>
 			<RecentOrders />
 		</div>
-
-	</>;
+	);
 };
 
 export default AdminDashboard;

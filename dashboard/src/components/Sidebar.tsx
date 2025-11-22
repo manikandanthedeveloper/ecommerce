@@ -12,7 +12,7 @@ const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<R
         <>
             {/* Sidebar */}
             <aside
-                className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-[56px] md:mt-0 bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-0 md:w-16' : 'w-64'
+                className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-14 md:mt-0 bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-0 md:w-16' : 'w-64'
                     } border-r border-gray-200`}
                 ref={sidebarRef}
             >

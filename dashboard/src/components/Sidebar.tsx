@@ -1,18 +1,12 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import type { MenuItem } from '../models/MenuItem'
 import { MdChevronRight, MdChevronLeft } from 'react-icons/md'
 import { getNavs } from '../navigation';
 import Navigation from './Navigation';
 import Footer from './UI/Footer';
 
-const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>> }> = ({ isCollapsed, setIsCollapsed }) => {
-    const location = useLocation()
+const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>; sidebarRef: React.RefObject<HTMLDivElement> }> = ({ isCollapsed, setIsCollapsed, sidebarRef }) => {
     const [menuItems] = useState<MenuItem[]>(() => getNavs('admin'));
-
-    const isActive = (path: string) => {
-        return location.pathname === path || location.pathname.startsWith(path + '/')
-    }
 
     return (
         <>
@@ -20,6 +14,7 @@ const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<R
             <aside
                 className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-[56px] md:mt-0 bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-0 md:w-16' : 'w-64'
                     } border-r border-gray-200`}
+                ref={sidebarRef}
             >
                 {/* Collapse Toggle Button */}
                 <button
@@ -38,7 +33,7 @@ const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<R
                     <nav className="flex-1 px-2 py-4 space-y-1">
                         {menuItems.map((item) => (
                             <div key={item.title}>
-                                <Navigation item={item} isCollapsed={isCollapsed} isActive={isActive} />
+                                <Navigation item={item} isCollapsed={isCollapsed} />
                             </div>
                         ))}
                     </nav>

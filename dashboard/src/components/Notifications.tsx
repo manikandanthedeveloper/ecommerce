@@ -1,6 +1,6 @@
+import { useEffect, useRef } from "react";
 import { MdNotifications } from "react-icons/md";
 import NotificationsItems from "./NotificationsItems";
-import { useEffect, useRef } from "react";
 
 // Mock notifications
 const notifications = [

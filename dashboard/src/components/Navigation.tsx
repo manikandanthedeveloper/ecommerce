@@ -1,8 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import type { MenuItem } from '../models/MenuItem';
 
-const Navigation: React.FC<{ item: MenuItem; isCollapsed: boolean; isActive: (path: string) => boolean }> = ({ item, isCollapsed, isActive }) => {
+const Navigation: React.FC<{ item: MenuItem; isCollapsed: boolean }> = ({ item, isCollapsed }) => {
+    const location = useLocation();
+
+    const isActive = (path: string) => {
+        return location.pathname === path || location.pathname.startsWith(path + '/')
+    }
+
     return <Link
         to={item.path}
         className={`flex items-center justify-between px-3 py-2.5 rounded-lg  duration-500 hover:pl-4 transition-colors ${isActive(item.path)

@@ -81,8 +81,7 @@ const AddProduct = () => {
 
     return (
         <div className="px-2 md:px-7 py-5">
-            <h1 className="text-2xl font-bold mb-6">Add Product</h1>
-
+            <h1 className="text-2xl font-bold mb-4">Add Product</h1>
             <form onSubmit={handleSubmit}>
                 <div className="w-full flex flex-wrap gap-4">
                     {/* Left Column - Product Images */}

@@ -99,7 +99,7 @@ export const allNavs: MenuItem[] = [
 		title: "Discount Product",
 		icon: <TbBasketDiscount />,
 		role: "seller",
-		path: "/sellers/dashboard/discount-product",
+		path: "/sellers/dashboard/discount-products",
 	},
 	{
 		id: 13,

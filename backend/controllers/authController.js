@@ -60,6 +60,30 @@ class authController {
 			return responseError(res, "Server error", 500);
 		}
 	};
+	createUser = async (req, res, next) => {
+		const { name, email, password, role } = req.body;
+		try {
+			const existingUser = await User.findOne({ email });
+			if (existingUser) {
+				return responseError(res, "User already exists", 409);
+			}
+			const hashedPassword = await bcrypt.hash(password, 10);
+			const newUser = new User({
+				name,
+				email,
+				password: hashedPassword,
+				role,
+			});
+			await newUser.save();
+			return responseSuccess(
+				res,
+				{ message: "User created successfully" },
+				201
+			);
+		} catch (err) {
+			return responseError(res, "Server error", 500);
+		}
+	};
 }
 
 module.exports = new authController();

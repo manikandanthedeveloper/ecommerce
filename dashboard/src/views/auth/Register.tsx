@@ -4,6 +4,11 @@ import { FaFacebook, FaGoogle } from "react-icons/fa"
 import type { User } from "../../models/User";
 import type { ErrorState } from "../../models/UserErrorState";
 import UserInput from "../../components/UI/UserInput";
+import Buttont from "../../components/UI/Buttont";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { register, messageClear } from "../../store/reducers/authSlice";
+import { useAuthToast } from "../../hooks/useAuthToast";
+import { isValid } from "../../util/util";
 
 const initialError: ErrorState = {
     name: "",
@@ -18,12 +23,14 @@ const initialData = { name: "", email: "", password: "", confirmpassword: "", po
 const Register = () => {
     const [formData, setFormData] = useState<User>(initialData);
     const [error, setError] = useState<ErrorState>(initialError);
+    const { loader, errorMessage, isAuthenticated, successMessage } = useAppSelector((state) => state.auth);
+    const dispatch = useAppDispatch();
 
-    const nameRef = useRef<HTMLInputElement | null>(null);
-    const emailRef = useRef<HTMLInputElement | null>(null);
-    const passwordRef = useRef<HTMLInputElement | null>(null);
-    const confirmPasswordRef = useRef<HTMLInputElement | null>(null);
-    const policyAcceptedRef = useRef<HTMLInputElement | null>(null);
+    const nameRef = useRef<HTMLInputElement>(null!);
+    const emailRef = useRef<HTMLInputElement>(null!);
+    const passwordRef = useRef<HTMLInputElement>(null!);
+    const confirmPasswordRef = useRef<HTMLInputElement>(null!);
+    const policyAcceptedRef = useRef<HTMLInputElement>(null!);
 
     const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const { name, type, value, checked } = event.target;
@@ -33,44 +40,21 @@ const Register = () => {
 
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
-        if (!isValid()) return
-        console.log(formData, 'form submitted!!!');
+        if (!isValid(formData, setError, nameRef, emailRef, passwordRef, confirmPasswordRef, policyAcceptedRef, initialError)) return
+        dispatch(register(formData))
+            .unwrap()
+            .then(() => {
+                setFormData(initialData);
+                dispatch(messageClear());
+            });
     }
 
-    const isValid = () => {
-        let isValid: boolean = true;
-        const name = formData.name.trim();
-        const email = formData.email.trim();
-        const password = formData.password.trim();
-        const confirmpassword = formData.confirmpassword.trim();
-        const policyAccepted = formData.policyAccepted;
-
-        setError(initialError);
-
-        if (name === "" || name.length < 3) {
-            setError((prevState) => ({ ...prevState, name: "Enter valid name" }));
-            nameRef.current?.focus();
-            isValid = false;
-        } else if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
-            setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
-            emailRef.current?.focus();
-            isValid = false;
-        } else if (password === "" || password.length < 5) {
-            setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
-            passwordRef.current?.focus();
-            isValid = false;
-        } else if (confirmpassword === "" || confirmpassword !== password) {
-            setError((prevState) => ({ ...prevState, confirmpassword: "Password and Confirm password not match" }));
-            confirmPasswordRef.current?.focus();
-            isValid = false;
-        } else if (!policyAccepted) {
-            setError((prevState) => ({ ...prevState, policyAccepted: "Please agree privacy policy and terms", }));
-            policyAcceptedRef.current?.focus();
-            isValid = false;
-        }
-
-        return isValid;
-    }
+    useAuthToast({
+        errorMessage,
+        successMessage,
+        isAuthenticated,
+        redirectTo: successMessage ? '/login' : undefined,
+    });
 
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
@@ -86,7 +70,7 @@ const Register = () => {
                     <UserInput label="Confirm Password" type="password" name="confirmpassword" placeholder="Confirm your password" value={formData.confirmpassword} error={error.confirmpassword} onChange={onChangeHandler} inputRef={confirmPasswordRef} />
                     <UserInput label="I agree to privacy policy & terms" type="checkbox" name="policyAccepted" value={formData.policyAccepted} error={error.policyAccepted} onChange={onChangeHandler} inputRef={policyAcceptedRef} />
 
-                    <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3'>Sign Up</button>
+                    <Buttont loader={loader} text="Sign Up" />
 
                     <div className='flex items-center mb-3 gap-3 justify-center'>
                         <p>Already Have an account ? <Link className='font-bold' to="/login">Sing In</Link> </p>
@@ -96,7 +80,7 @@ const Register = () => {
                         <div className='w-[45%] bg-amber-50 h-px'></div>
                         <div className='w-[10%] flex justify-center items-center'>
                             <span className='pb-1'>Or</span>
-                        </div>
+                        </div>ß
                         <div className='w-[45%] bg-amber-50 h-px'></div>
                     </div>
 

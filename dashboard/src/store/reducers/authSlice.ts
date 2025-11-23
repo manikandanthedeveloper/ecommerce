@@ -41,6 +41,42 @@ export const adminLogin = createAsyncThunk(
 	}
 );
 
+export const register = createAsyncThunk(
+	"auth/register",
+	async (
+		userData: {
+			name: string;
+			email: string;
+			password: string;
+			confirmpassword: string;
+			policyAccepted: boolean;
+		},
+		{ rejectWithValue, fulfillWithValue }
+	) => {
+		try {
+			const { data } = await api.post("/register", userData, {
+				withCredentials: true,
+				headers: { "Content-Type": "application/json" },
+			});
+
+			return fulfillWithValue({
+				successMessage:
+					data.message ||
+					data.data?.message ||
+					"Registration successful",
+			});
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				return rejectWithValue(
+					error.response.data?.message || "Registration failed"
+				);
+			}
+
+			return rejectWithValue("Something went wrong. Please try again.");
+		}
+	}
+);
+
 const returnRole = (token: string | null): string => {
 	if (token) {
 		const decodeToken = jwtDecode<DecodedToken>(token);
@@ -109,6 +145,26 @@ export const authSlice = createSlice({
 				state.token = null;
 				state.errorMessage =
 					(action.payload as string) || "Login failed";
+			});
+		builder
+			.addCase(register.pending, (state) => {
+				state.loader = true;
+				state.errorMessage = null;
+				state.successMessage = null;
+				state.isAuthenticated = false;
+			})
+			.addCase(register.fulfilled, (state, action) => {
+				state.loader = false;
+				state.errorMessage = null;
+				state.successMessage = action.payload.successMessage;
+				state.isAuthenticated = true;
+			})
+			.addCase(register.rejected, (state, action) => {
+				state.loader = false;
+				state.errorMessage =
+					(action.payload as string) || "Registration failed";
+				state.successMessage = null;
+				state.isAuthenticated = false;
 			});
 	},
 });

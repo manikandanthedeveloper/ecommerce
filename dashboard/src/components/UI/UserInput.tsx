@@ -48,6 +48,7 @@ const UserInput: React.FC<UserInputProps> = ({
                 onChange={onChange}
                 className={`px-3 py-2 outline-none border bg-transparent rounded-md ${error ? "border-red-600" : "border-blue-400"
                     }`}
+                autoComplete="off"
             />
             {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>

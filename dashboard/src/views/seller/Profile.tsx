@@ -220,7 +220,7 @@ const Profile = () => {
                             {/* Profile Picture */}
                             <div className="flex flex-col items-center">
                                 <div className="relative">
-                                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
+                                    <div className="w-32 h-32 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
                                         {profileImage ? (
                                             <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                                         ) : (
@@ -347,7 +347,7 @@ const Profile = () => {
                             {/* Shop Logo */}
                             <div className="flex flex-col items-center">
                                 <div className="relative">
-                                    <div className="w-32 h-32 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
+                                    <div className="w-32 h-32 rounded-lg bg-linear-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
                                         {shopLogo ? (
                                             <img src={shopLogo} alt="Shop Logo" className="w-full h-full object-cover" />
                                         ) : (

@@ -1,13 +1,12 @@
-import { useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { useRef, useState } from "react";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
 import UserInput from "../../components/UI/UserInput"
 import { adminLogin, messageClear } from "../../store/reducers/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { PropagateLoader } from "react-spinners";
 import LogoImage from '../../../public/logo.svg';
-import { useNavigate } from "react-router-dom";
+import Buttont from "../../components/UI/Buttont";
+import { useAuthToast } from "../../hooks/useAuthToast";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -26,14 +25,6 @@ const AdminLogin = () => {
     const { loader, errorMessage, isAuthenticated, successMessage } = useAppSelector((state) => state.auth);
     const emailRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
-    const overideStyle = {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: "0 auto",
-        height: "24px"
-    }
-    const navigate = useNavigate();
 
     const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const { name, type, value, checked } = event.target;
@@ -48,6 +39,13 @@ const AdminLogin = () => {
         dispatch(adminLogin({ email: formData.email, password: formData.password }));
         setFormData(initialData);
     }
+
+    useAuthToast({
+        errorMessage,
+        successMessage,
+        isAuthenticated,
+        redirectTo: isAuthenticated ? '/admin/dashboard' : undefined,
+    });
 
     const isValid = () => {
         let isValid: boolean = true;
@@ -69,24 +67,6 @@ const AdminLogin = () => {
         return isValid;
     }
 
-    useMemo(() => {
-        if (!errorMessage && !successMessage) return;
-
-        if (errorMessage) {
-            toast.error(errorMessage);
-        }
-
-        if (isAuthenticated && successMessage) {
-            toast.success(successMessage || "Login successful");
-            navigate('/');
-        }
-    }, [
-        errorMessage,
-        isAuthenticated,
-        successMessage,
-        navigate
-    ]);
-
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
             <div className="md:w-[500px] sm:[350px] bg-blue-500 text-white sm:2 md:p-4">
@@ -97,7 +77,7 @@ const AdminLogin = () => {
                 <form onSubmit={onSubmitHandler}>
                     <UserInput label="Email" type="email" name="email" placeholder="Enter your email" value={formData.email} error={error.email} onChange={onChangeHandler} inputRef={emailRef} />
                     <UserInput label="Password" type="password" name="password" placeholder="Enter your password" value={formData.password} error={error.password} onChange={onChangeHandler} inputRef={passwordRef} />
-                    <button disabled={loader} className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">{loader ? <PropagateLoader cssOverride={overideStyle} color="#ffffff" /> : "Login"}</button>
+                    <Buttont loader={loader} text="Login" />
                 </form>
             </div>
         </div>

@@ -207,8 +207,8 @@ const ChatSellersPage = () => {
                         >
                             <div className="flex items-start space-x-3">
                                 {/* Avatar */}
-                                <div className="relative flex-shrink-0">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                                <div className="relative shrink-0">
+                                    <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                                         {seller.avatar}
                                     </div>
                                     {seller.isOnline && (
@@ -228,7 +228,7 @@ const ChatSellersPage = () => {
 
                                 {/* Unread Badge */}
                                 {seller.unreadCount > 0 && (
-                                    <div className="flex-shrink-0">
+                                    <div className="shrink-0">
                                         <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-semibold text-white bg-blue-600 rounded-full">
                                             {seller.unreadCount}
                                         </span>
@@ -255,8 +255,8 @@ const ChatSellersPage = () => {
                                     >
                                         <MdArrowBack className="text-xl" />
                                     </button>
-                                    <div className="relative flex-shrink-0">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                                    <div className="relative shrink-0">
+                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                                             {selectedSeller.avatar}
                                         </div>
                                         {selectedSeller.isOnline && (
@@ -297,7 +297,7 @@ const ChatSellersPage = () => {
                                     <div className={`flex items-end space-x-1.5 sm:space-x-2 max-w-[85%] sm:max-w-md lg:max-w-lg ${message.isSender ? 'flex-row-reverse space-x-reverse' : ''}`}>
                                         {/* Avatar for received messages */}
                                         {!message.isSender && (
-                                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+                                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold shrink-0">
                                                 {selectedSeller.avatar}
                                             </div>
                                         )}
@@ -310,7 +310,7 @@ const ChatSellersPage = () => {
                                                     : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
                                                     }`}
                                             >
-                                                <p className="text-sm break-words">{message.text}</p>
+                                                <p className="text-sm wrap-break-word">{message.text}</p>
                                             </div>
                                             <span className={`text-xs text-gray-500 mt-1 block ${message.isSender ? 'text-right' : 'text-left'}`}>
                                                 {message.timestamp}

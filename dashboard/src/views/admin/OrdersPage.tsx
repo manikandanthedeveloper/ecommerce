@@ -13,6 +13,7 @@ const OrdersPage = () => {
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
+            <h1 className="text-2xl font-bold mb-4">Orders</h1>
             <div className='w-full p-4 bg-white border border-gray-200'>
                 <div className='flex justify-between items-center'>
                     <select onChange={(e) => setParPage(parseInt(e.target.value))} className='px-4 py-2 outline-none bg-white border border-gray-200 text-black'>
@@ -74,10 +75,6 @@ const OrdersPage = () => {
                         showItem={4}
                     />
                 </div>
-
-
-
-
             </div>
         </div>
     );

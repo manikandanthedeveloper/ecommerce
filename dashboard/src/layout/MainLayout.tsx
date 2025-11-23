@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Outlet } from "react-router-dom"
 import Header from "../components/Header"
 import Sidebar from "../components/Sidebar"
@@ -6,18 +6,6 @@ import Sidebar from "../components/Sidebar"
 const MainLayout = () => {
     const [isCollapsed, setIsCollapsed] = useState(false)
     const sidebarRef = useRef<HTMLDivElement>(null!);
-
-    // useEffect(() => {
-    //     const handleClickOutside = (event: MouseEvent) => {
-    //         if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-    //             setIsCollapsed(!isCollapsed);
-    //         }
-
-    //     }
-
-    //     document.addEventListener('mousedown', handleClickOutside)
-    //     return () => document.removeEventListener('mousedown', handleClickOutside)
-    // })
 
     return (
         <div className="bg-[#f5f5f5] min-h-screen w-full">

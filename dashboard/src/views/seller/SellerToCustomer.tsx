@@ -22,7 +22,7 @@ interface Seller {
     isOnline: boolean;
 }
 
-const ChatSellersPage = () => {
+const SellerToCustomer = () => {
     const [selectedSeller, setSelectedSeller] = useState<Seller | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [messageInput, setMessageInput] = useState('');
@@ -157,16 +157,16 @@ const ChatSellersPage = () => {
 
             {/* Sellers List Sidebar */}
             <div className={`
-                w-full sm:w-80 lg:w-80 bg-white border-r border-gray-200 flex flex-col
-                fixed lg:relative inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
-                h-full lg:h-auto
-                ${(!selectedSeller || !selectedSeller.id || isSidebarOpen) ? 'translate-x-0' : '-translate-x-full'}
-                lg:translate-x-0
-            `}>
+                   w-full sm:w-80 lg:w-80 bg-white border-r border-gray-200 flex flex-col
+                   fixed lg:relative inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
+                   h-full lg:h-auto
+                   ${(!selectedSeller || !selectedSeller.id || isSidebarOpen) ? 'translate-x-0' : '-translate-x-full'}
+                   lg:translate-x-0
+               `}>
                 {/* Search Header */}
                 <div className="p-4 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xl font-semibold text-gray-800">Sellers</h2>
+                        <h2 className="text-xl font-semibold text-gray-800">Customers</h2>
                         <button
                             onClick={() => {
                                 if (selectedSeller) {
@@ -370,6 +370,6 @@ const ChatSellersPage = () => {
             </div>
         </div>
     );
-};
+}
 
-export default ChatSellersPage;
+export default SellerToCustomer

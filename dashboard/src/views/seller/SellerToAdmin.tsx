@@ -99,7 +99,7 @@ const SellerToAdmin = () => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <div className="relative shrink-0">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                                <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                                     {admin.avatar}
                                 </div>
                                 {admin.isOnline && (
@@ -149,7 +149,7 @@ const SellerToAdmin = () => {
                             <div className={`flex items-end space-x-2 max-w-[85%] sm:max-w-md lg:max-w-lg ${message.isSender ? 'flex-row-reverse space-x-reverse' : ''}`}>
                                 {/* Avatar for received messages */}
                                 {!message.isSender && (
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold shrink-0">
+                                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold shrink-0">
                                         {admin.avatar}
                                     </div>
                                 )}
@@ -162,7 +162,7 @@ const SellerToAdmin = () => {
                                             : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
                                             }`}
                                     >
-                                        <p className="text-sm break-words">{message.text}</p>
+                                        <p className="text-sm wrap-break-word">{message.text}</p>
                                     </div>
                                     <span className={`text-xs text-gray-500 mt-1 block ${message.isSender ? 'text-right' : 'text-left'}`}>
                                         {message.timestamp}

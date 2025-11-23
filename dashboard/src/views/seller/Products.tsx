@@ -11,7 +11,7 @@ const Products = () => {
 
     return (
         <div className="px-2 md:px-7 py-5">
-            <h1 className="text-2xl font-bold mb-4">Sellers</h1>
+            <h1 className="text-2xl font-bold mb-4">Products</h1>
             <div className='w-full p-4 bg-white border border-gray-200'>
                 <div className='flex justify-between items-center'>
                     <select onChange={(e) => setParPage(parseInt(e.target.value))} className='px-4 py-2 outline-none bg-white border border-gray-200 text-black' name="parPage" id="parPage" value={parPage}>
@@ -53,7 +53,7 @@ const Products = () => {
                                     <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>50</td>
                                     <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>
                                         <div className="flex gap-2">
-                                            <Link to={'/'}><FaEdit className="bg-green-500 text-white p-1 text-2xl" /></Link>
+                                            <Link to={`/sellers/dashboard/edit-product/${i + 1}`}><FaEdit className="bg-green-500 text-white p-1 text-2xl" /></Link>
                                             <Link to={'/'}><FaTrash className="bg-red-500 text-white p-1 text-2xl" /></Link>
                                         </div>
                                     </td>

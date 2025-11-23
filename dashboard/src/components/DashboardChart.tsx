@@ -1,6 +1,8 @@
 import Chart from "react-apexcharts";
 
-const DashboardChart = () => {
+const DashboardChart: React.FC<{ role?: string }> = ({ role }) => {
+	const chartSeries = role === "admin" ? "Sellers" : "Sales";
+
 	const state = {
 		series: [
 			{
@@ -12,7 +14,7 @@ const DashboardChart = () => {
 				data: [67, 39, 45, 56, 90, 56, 23, 56, 87, 78, 67, 78],
 			},
 			{
-				name: "Sellers",
+				name: chartSeries,
 				data: [34, 39, 56, 56, 80, 67, 23, 56, 98, 78, 45, 56],
 			},
 		],

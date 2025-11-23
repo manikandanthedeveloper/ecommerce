@@ -2,7 +2,7 @@ import { FaUser } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { MdCurrencyExchange, MdProductionQuantityLimits } from "react-icons/md";
 import DashboardChart from "../../components/DashboardChart";
-import RecentSellerMessages from "../../components/RecentSellerMessages";
+import RecentSellerMessages from "../../components/RecentMessages";
 import RecentOrders from "../../components/RecentOrders";
 
 const AdminDashboard = () => {
@@ -50,12 +50,12 @@ const AdminDashboard = () => {
 			<div className="w-full flex flex-wrap mt-7">
 				<div className="w-full lg:w-7/12 lg:pr-3">
 					<div className="w-full border border-gray-200 bg-white">
-						<DashboardChart />
+						<DashboardChart role="admin" />
 					</div>
 				</div>
 				<div className="w-full lg:w-5/12">
 					<div className="border border-gray-200 bg-white">
-						<RecentSellerMessages />
+						<RecentSellerMessages role="admin" />
 					</div>
 				</div>
 			</div>

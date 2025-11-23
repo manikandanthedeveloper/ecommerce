@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 
-const RecentSellerMessages = () => {
+const RecentMessages: React.FC<{ role?: string }> = ({ role }) => {
+    const roleType = role === "admin" ? "Sellers" : "Customer";
+
     return (
         <div className='w-full p-4'>
             <div className='flex items-center justify-between'>
-                <h2 className='text-xl font-normal'>Recent Seller Messages</h2>
+                <h2 className='text-xl font-normal'>Recent {roleType} Messages</h2>
                 <Link to={'messages'} className='text-sm'>View All</Link>
             </div>
             <div className='flex flex-col gap-2 pt-4 text-[#d0d2d6]'>
@@ -63,4 +65,4 @@ const RecentSellerMessages = () => {
     )
 }
 
-export default RecentSellerMessages
+export default RecentMessages

@@ -18,8 +18,8 @@ const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<R
     return (
         <aside
             className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-14 md:mt-0 bg-white shadow-lg transition-all duration-300 border-r border-gray-200 ${isCollapsed
-                    ? '-translate-x-full md:translate-x-0 md:w-16'
-                    : 'translate-x-0 w-64'
+                ? '-translate-x-full md:translate-x-0 md:w-16'
+                : 'translate-x-0 w-64'
                 }`}
             ref={sidebarRef}
         >

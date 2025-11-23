@@ -1,12 +1,14 @@
 import { lazy } from "react";
-import CategoryPage from "../views/admin/CategoryPage";
-import SellersPage from "../views/admin/SellersPage";
-import PaymentRequest from "../views/admin/PaymentRequest";
-import DeactiveSellers from "../views/admin/DeactiveSellers";
-import SellerRequest from "../views/admin/SellerRequest";
 
 const AdminDashboard = lazy(() => import("../views/admin/AdminDashboard"));
 const OrdersPage = lazy(() => import("../views/admin/OrdersPage"))
+const CategoryPage = lazy(() => import("../views/admin/CategoryPage"))
+const SellersPage = lazy(() => import("../views/admin/SellersPage"))
+const PaymentRequest = lazy(() => import("../views/admin/PaymentRequest"))
+const DeactiveSellers = lazy(() => import("../views/admin/DeactiveSellers"))
+const SellerRequest = lazy(() => import("../views/admin/SellerRequest"))
+const SellerDetailsPage = lazy(() => import("../views/admin/SellerDetailsPage"))
+const ChatSellersPage = lazy(() => import("../views/admin/ChatSellersPage"))
 
 export const adminRoutes = [
     {
@@ -42,6 +44,16 @@ export const adminRoutes = [
     {
         path: "admin/dashboard/sellers-request",
         element: <SellerRequest />,
+        role: "admin",
+    },
+    {
+        path: "admin/dashboard/sellers/details/:id",
+        element: <SellerDetailsPage />,
+        role: "admin",
+    },
+    {
+        path: "admin/dashboard/chat-sellers",
+        element: <ChatSellersPage />,
         role: "admin",
     },
 ];

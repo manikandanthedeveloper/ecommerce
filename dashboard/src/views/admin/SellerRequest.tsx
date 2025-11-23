@@ -45,7 +45,7 @@ const SellerRequest = () => {
                                     <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>Pending</td>
                                     <td scope='row' className='py-3 px-4 font-medium whitespace-nowrap'>
                                         <div className="flex gap-2">
-                                            <Link to={'/'}><FaEdit className="bg-green-500 text-white p-1 text-2xl" /></Link>
+                                            <Link to={`/admin/dashboard/sellers/details/${i + 1}`}><FaEdit className="bg-green-500 text-white p-1 text-2xl" /></Link>
                                             <Link to={'/'}><FaTrash className="bg-red-500 text-white p-1 text-2xl" /></Link>
                                         </div>
                                     </td>

@@ -13,7 +13,7 @@ interface OrderItem {
     total: number;
 }
 
-const OrderDetailsPage = () => {
+const OrderDetails = () => {
     const navigate = useNavigate();
 
     // Mock order data (in real app, this would come from API/route params)
@@ -295,4 +295,4 @@ const OrderDetailsPage = () => {
     );
 };
 
-export default OrderDetailsPage;
+export default OrderDetails;

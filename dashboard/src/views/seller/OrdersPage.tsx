@@ -46,7 +46,7 @@ const OrdersPage = () => {
                                     <div className='py-3 w-[18%] font-medium'>Pending</div>
                                     <div className='py-3 w-[18%] font-medium'>Shipped</div>
                                     <div className='py-3 w-[18%] font-medium'>
-                                        <Link to={`/admin/dashboard/orders/details/${i}`} >View</Link>
+                                        <Link to={`/sellers/dashboard/orders/details/${i}`} >View</Link>
                                     </div>
                                     <div onClick={() => setShow(!show)} className='py-3 w-[8%] font-medium text-xl'>{show ? <LuChevronDown /> : <LuChevronRight />}
                                     </div>

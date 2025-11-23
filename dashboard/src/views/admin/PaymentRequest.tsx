@@ -52,7 +52,7 @@ const PaymentRequest = () => {
 
     return (
         <div className="px-2 md:px-7 py-5">
-            <h1 className="text-2xl font-bold mb-4">Deactive Sellers</h1>
+            <h1 className="text-2xl font-bold mb-4"> Payment Requests</h1>
             <div className='w-full bg-white p-4 border border-gray-200'>
                 <div className='w-full overflow-x-auto'>
                     <div className='flex bg-blue-500 uppercase text-xs font-bold text-white min-w-[500px]'>

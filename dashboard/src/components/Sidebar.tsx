@@ -8,10 +8,19 @@ import Footer from './UI/Footer';
 const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>; sidebarRef: React.RefObject<HTMLDivElement> }> = ({ isCollapsed, setIsCollapsed, sidebarRef }) => {
     const [menuItems] = useState<MenuItem[]>(() => getNavs('admin'));
 
+    const handleNavigationClick = () => {
+        // Close sidebar on mobile after navigation
+        if (window.innerWidth < 768) {
+            setIsCollapsed(true);
+        }
+    };
+
     return (
         <aside
-            className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-14 md:mt-0 bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-0 md:w-16' : 'w-64'
-                } border-r border-gray-200`}
+            className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] mt-14 md:mt-0 bg-white shadow-lg transition-all duration-300 border-r border-gray-200 ${isCollapsed
+                    ? '-translate-x-full md:translate-x-0 md:w-16'
+                    : 'translate-x-0 w-64'
+                }`}
             ref={sidebarRef}
         >
             {/* Collapse Toggle Button */}
@@ -30,7 +39,7 @@ const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<R
             <div className="flex flex-col h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 <nav className="flex-1 px-2 py-4 space-y-1">
                     {menuItems.map((item) => (
-                        <div key={item.title}>
+                        <div key={item.title} onClick={handleNavigationClick}>
                             <Navigation item={item} isCollapsed={isCollapsed} />
                         </div>
                     ))}

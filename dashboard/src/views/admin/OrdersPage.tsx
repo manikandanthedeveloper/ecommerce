@@ -38,15 +38,15 @@ const OrdersPage = () => {
                             </div>
                         </div>
 
-                        {
-                            <div className='text-black'>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
+                            <div className='text-black' key={i}>
                                 <div className='flex justify-between items-start border-b border-gray-200 font-normal'>
                                     <div className='py-3 w-[25%] font-medium whitespace-nowrap'>#123456</div>
                                     <div className='py-3 w-[13%] font-medium'>Rs. 422</div>
                                     <div className='py-3 w-[18%] font-medium'>Pending</div>
                                     <div className='py-3 w-[18%] font-medium'>Shipped</div>
                                     <div className='py-3 w-[18%] font-medium'>
-                                        <Link to={`/admin/dashboard/order/details/`} >View</Link>
+                                        <Link to={`/admin/dashboard/orders/details/${i}`} >View</Link>
                                     </div>
                                     <div onClick={() => setShow(!show)} className='py-3 w-[8%] font-medium text-xl'>{show ? <LuChevronDown /> : <LuChevronRight />}
                                     </div>
@@ -62,7 +62,7 @@ const OrdersPage = () => {
                                     </div>
                                 </div>
                             </div>
-                        }
+                        ))}
 
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import Navigation from './Navigation';
 import Footer from './UI/Footer';
 
 const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>; sidebarRef: React.RefObject<HTMLDivElement> }> = ({ isCollapsed, setIsCollapsed, sidebarRef }) => {
-    const [menuItems] = useState<MenuItem[]>(() => getNavs('admin'));
+    const [menuItems] = useState<MenuItem[]>(() => getNavs('seller'));
 
     const handleNavigationClick = () => {
         // Close sidebar on mobile after navigation

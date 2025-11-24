@@ -6,7 +6,7 @@ import type { ErrorState } from "../../models/UserErrorState";
 import UserInput from "../../components/UI/UserInput";
 import Buttont from "../../components/UI/Buttont";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { register, messageClear } from "../../store/reducers/authSlice";
+import { sellerRegister, messageClear } from "../../store/reducers/authSlice";
 import { useAuthToast } from "../../hooks/useAuthToast";
 import { isValid } from "../../util/util";
 
@@ -41,7 +41,7 @@ const Register = () => {
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
         if (!isValid(formData, setError, nameRef, emailRef, passwordRef, confirmPasswordRef, policyAcceptedRef, initialError)) return
-        dispatch(register(formData))
+        dispatch(sellerRegister(formData))
             .unwrap()
             .then(() => {
                 setFormData(initialData);

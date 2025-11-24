@@ -4,8 +4,11 @@ import UserInput from "../../components/UI/UserInput"
 import { useRef, useState } from "react";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
-import { adminLogin } from "../../store/reducers/authSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { messageClear, sellerLogin } from "../../store/reducers/authSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { isValidLogin } from "../../util/util";
+import { useAuthToast } from "../../hooks/useAuthToast";
+import Buttont from "../../components/UI/Buttont";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -18,9 +21,10 @@ const Login = () => {
     const [formData, setFormData] = useState<Login>(initialData);
     const [error, setError] = useState<LoginErrorState>(initialError);
     const dispatch = useAppDispatch();
+    const { loader, errorMessage, isAuthenticated, successMessage } = useAppSelector((state) => state.auth);
 
-    const emailRef = useRef<HTMLInputElement | null>(null);
-    const passwordRef = useRef<HTMLInputElement | null>(null);
+    const emailRef = useRef<HTMLInputElement>(null!);
+    const passwordRef = useRef<HTMLInputElement>(null!);
 
     const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const { name, type, value, checked } = event.target;
@@ -30,31 +34,20 @@ const Login = () => {
 
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
-        if (!isValid()) return
+        if (!isValidLogin(formData, setError, emailRef, passwordRef, initialError)) return
         console.log(formData, 'form submitted!!!');
-        dispatch(adminLogin({ email: formData.email, password: formData.password }));
-        setFormData(initialData);
+        dispatch(sellerLogin({ email: formData.email, password: formData.password })).unwrap().then(() => {
+            setFormData(initialData);
+            dispatch(messageClear());
+        });
     }
 
-    const isValid = () => {
-        let isValid: boolean = true;
-        const email = formData.email.trim();
-        const password = formData.password.trim();
-
-        setError(initialError);
-
-        if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
-            setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
-            emailRef.current?.focus();
-            isValid = false;
-        } else if (password === "" || password.length < 5) {
-            setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
-            passwordRef.current?.focus();
-            isValid = false;
-        }
-
-        return isValid;
-    }
+    useAuthToast({
+        errorMessage,
+        successMessage,
+        isAuthenticated,
+        redirectTo: isAuthenticated ? '/sellers/dashboard' : undefined,
+    });
 
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>
@@ -65,7 +58,7 @@ const Login = () => {
                 <form onSubmit={onSubmitHandler}>
                     <UserInput label="Email" type="email" name="email" placeholder="Enter your email" value={formData.email} error={error.email} onChange={onChangeHandler} inputRef={emailRef} />
                     <UserInput label="Password" type="password" name="password" placeholder="Enter your password" value={formData.password} error={error.password} onChange={onChangeHandler} inputRef={passwordRef} />
-                    <button className='bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3' type="submit">Sign In</button>
+                    <Buttont loader={loader} text="Sign In" />
 
                     <div className='flex items-center mb-3 gap-3 justify-center'>
                         <p>Don't Have an account ? <Link className='font-bold' to="/register">Sing Up</Link> </p>

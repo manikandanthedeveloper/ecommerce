@@ -1,5 +1,7 @@
 import type { User } from "../models/User";
 import type { ErrorState } from "../models/UserErrorState";
+import type { Login } from "../models/Login";
+import type { LoginErrorState } from "../models/LoginErrorState";
 
 export const isValid = (
 	formData: User,
@@ -53,6 +55,40 @@ export const isValid = (
 			policyAccepted: "Please agree privacy policy and terms",
 		}));
 		policyAcceptedRef.current?.focus();
+		isValid = false;
+	}
+
+	return isValid;
+};
+
+export const isValidLogin = (
+	formData: Login,
+	setError: React.Dispatch<React.SetStateAction<LoginErrorState>>,
+	emailRef: React.RefObject<HTMLInputElement>,
+	passwordRef: React.RefObject<HTMLInputElement>,
+	initialError: LoginErrorState
+) => {
+	let isValid: boolean = true;
+	const email = formData.email.trim();
+	const password = formData.password.trim();
+
+	setError(initialError);
+
+	if (
+		email === "" ||
+		!email.includes("@") ||
+		!email.includes(".") ||
+		email.length < 7
+	) {
+		setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
+		emailRef.current?.focus();
+		isValid = false;
+	} else if (password === "" || password.length < 5) {
+		setError((prevState) => ({
+			...prevState,
+			password: "Enter valid password",
+		}));
+		passwordRef.current?.focus();
 		isValid = false;
 	}
 

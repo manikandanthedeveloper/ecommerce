@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import LogoImage from '../../../public/logo.svg';
 import Buttont from "../../components/UI/Buttont";
 import { useAuthToast } from "../../hooks/useAuthToast";
+import { isValidLogin } from "../../util/util";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -23,8 +24,8 @@ const AdminLogin = () => {
     const [error, setError] = useState<LoginErrorState>(initialError);
     const dispatch = useAppDispatch();
     const { loader, errorMessage, isAuthenticated, successMessage } = useAppSelector((state) => state.auth);
-    const emailRef = useRef<HTMLInputElement | null>(null);
-    const passwordRef = useRef<HTMLInputElement | null>(null);
+    const emailRef = useRef<HTMLInputElement>(null!);
+    const passwordRef = useRef<HTMLInputElement>(null!);
 
     const onChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const { name, type, value, checked } = event.target;
@@ -34,10 +35,14 @@ const AdminLogin = () => {
 
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
-        if (!isValid()) return;
+        if (!isValidLogin(formData, setError, emailRef, passwordRef, initialError)) return;
 
-        dispatch(adminLogin({ email: formData.email, password: formData.password }));
-        setFormData(initialData);
+        dispatch(adminLogin({ email: formData.email, password: formData.password }))
+            .unwrap()
+            .then(() => {
+                setFormData(initialData);
+                dispatch(messageClear());
+            });
     }
 
     useAuthToast({
@@ -47,25 +52,25 @@ const AdminLogin = () => {
         redirectTo: isAuthenticated ? '/admin/dashboard' : undefined,
     });
 
-    const isValid = () => {
-        let isValid: boolean = true;
-        const email = formData.email.trim();
-        const password = formData.password.trim();
+    // const isValid = () => {
+    //     let isValid: boolean = true;
+    //     const email = formData.email.trim();
+    //     const password = formData.password.trim();
 
-        setError(initialError);
+    //     setError(initialError);
 
-        if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
-            setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
-            emailRef.current?.focus();
-            isValid = false;
-        } else if (password === "" || password.length < 5) {
-            setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
-            passwordRef.current?.focus();
-            isValid = false;
-        }
+    //     if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
+    //         setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
+    //         emailRef.current?.focus();
+    //         isValid = false;
+    //     } else if (password === "" || password.length < 5) {
+    //         setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
+    //         passwordRef.current?.focus();
+    //         isValid = false;
+    //     }
 
-        return isValid;
-    }
+    //     return isValid;
+    // }
 
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>

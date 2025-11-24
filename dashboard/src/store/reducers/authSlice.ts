@@ -41,20 +41,18 @@ export const adminLogin = createAsyncThunk(
 	}
 );
 
-export const register = createAsyncThunk(
-	"auth/register",
+export const sellerRegister = createAsyncThunk(
+	"auth/sellerRegister",
 	async (
 		userData: {
 			name: string;
 			email: string;
 			password: string;
-			confirmpassword: string;
-			policyAccepted: boolean;
 		},
 		{ rejectWithValue, fulfillWithValue }
 	) => {
 		try {
-			const { data } = await api.post("/register", userData, {
+			const { data } = await api.post("/seller/register", userData, {
 				withCredentials: true,
 				headers: { "Content-Type": "application/json" },
 			});
@@ -69,6 +67,43 @@ export const register = createAsyncThunk(
 			if (axios.isAxiosError(error) && error.response) {
 				return rejectWithValue(
 					error.response.data?.message || "Registration failed"
+				);
+			}
+
+			return rejectWithValue("Something went wrong. Please try again.");
+		}
+	}
+);
+
+export const sellerLogin = createAsyncThunk(
+	"auth/sellerLogin",
+	async (
+		credentials: { email: string; password: string },
+		{ rejectWithValue, fulfillWithValue }
+	) => {
+		try {
+			const { data } = await api.post("/seller/login", credentials, {
+				withCredentials: true,
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const token = data.token || data.data?.token;
+			if (token) {
+				return fulfillWithValue({
+					token,
+					user: data.user || data.data?.user || null,
+					successMessage:
+						data.message ||
+						data.data?.message ||
+						"Login successful",
+				});
+			} else {
+				return rejectWithValue(data.message || "Login failed");
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				return rejectWithValue(
+					error.response.data?.message || "Invalid credentials"
 				);
 			}
 
@@ -147,24 +182,44 @@ export const authSlice = createSlice({
 					(action.payload as string) || "Login failed";
 			});
 		builder
-			.addCase(register.pending, (state) => {
+			.addCase(sellerRegister.pending, (state) => {
 				state.loader = true;
 				state.errorMessage = null;
 				state.successMessage = null;
 				state.isAuthenticated = false;
 			})
-			.addCase(register.fulfilled, (state, action) => {
+			.addCase(sellerRegister.fulfilled, (state, action) => {
 				state.loader = false;
 				state.errorMessage = null;
 				state.successMessage = action.payload.successMessage;
 				state.isAuthenticated = true;
 			})
-			.addCase(register.rejected, (state, action) => {
+			.addCase(sellerRegister.rejected, (state, action) => {
 				state.loader = false;
 				state.errorMessage =
 					(action.payload as string) || "Registration failed";
 				state.successMessage = null;
 				state.isAuthenticated = false;
+			});
+		builder
+			.addCase(sellerLogin.pending, (state) => {
+				state.loader = true;
+				state.errorMessage = null;
+			})
+			.addCase(sellerLogin.fulfilled, (state, action) => {
+				state.loader = false;
+				state.isAuthenticated = true;
+				state.token = action.payload.token;
+				state.errorMessage = null;
+				state.successMessage = action.payload.successMessage;
+				state.role = action.payload.user?.role || null;
+			})
+			.addCase(sellerLogin.rejected, (state, action) => {
+				state.loader = false;
+				state.isAuthenticated = false;
+				state.token = null;
+				state.errorMessage =
+					(action.payload as string) || "Login failed";
 			});
 	},
 });

@@ -26,7 +26,16 @@ class authController {
 						sameSite: "None",
 						expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 					}); // 1 day
-					return responseSuccess(res, { token }, 200);
+					
+					// Return user data without password
+					const userResponse = {
+						_id: user._id,
+						name: user.name,
+						email: user.email,
+						role: user.role,
+					};
+					
+					return responseSuccess(res, { token, user: userResponse, message: "Login successful" }, 200);
 				} else {
 					return responseError(res, "Invalid password", 401);
 				}
@@ -68,7 +77,18 @@ class authController {
 						sameSite: "None",
 						expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 					}); // 1 day
-					return responseSuccess(res, { token }, 200);
+					
+					// Return user data without password
+					const userResponse = {
+						_id: seller._id,
+						name: seller.name,
+						email: seller.email,
+						role: seller.role,
+						shopInfo: seller.shopInfo,
+						status: seller.status,
+					};
+					
+					return responseSuccess(res, { token, user: userResponse, message: "Login successful" }, 200);
 				} else {
 					return responseError(res, "Invalid password", 401);
 				}
@@ -85,14 +105,14 @@ class authController {
 		const { id, role } = req;
 		try {
 			if (role === "admin") {
-				const user = await adminModel.findById(id).select("-password");
+				const user = await adminModel.findById(id);
 				if (user) {
 					return responseSuccess(res, { user }, 200);
 				} else {
 					return responseError(res, "User not found", 404);
 				}
 			} else if (role === "seller") {
-				const user = await sellerModel.findById(id).select("-password");
+				const user = await sellerModel.findById(id);
 				if (user) {
 					return responseSuccess(res, { user }, 200);
 				} else {
@@ -102,7 +122,7 @@ class authController {
 				return responseError(res, "Unauthorized access", 403);
 			}
 		} catch (err) {
-			return responseError(res, "Server error", 500);
+			return responseError(res, "Server errors", 500);
 		}
 	};
 
@@ -136,9 +156,20 @@ class authController {
 				sameSite: "None",
 				expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 			}); // 1 day
+			
+			// Return user data without password
+			const userResponse = {
+				_id: savedUser._id,
+				name: savedUser.name,
+				email: savedUser.email,
+				role: savedUser.role,
+				shopInfo: savedUser.shopInfo,
+				status: savedUser.status,
+			};
+			
 			return responseSuccess(
 				res,
-				{ token, message: "User created successfully" },
+				{ token, user: userResponse, message: "User created successfully" },
 				201
 			);
 		} catch (err) {

@@ -16,8 +16,8 @@ export const isValid = (
 	let isValid: boolean = true;
 	const name = formData.name.trim();
 	const email = formData.email.trim();
-	const password = formData.password.trim();
-	const confirmpassword = formData.confirmpassword.trim();
+	const password = formData.password?.trim() ?? "";
+	const confirmpassword = formData.confirmpassword?.trim() ?? "";
 	const policyAccepted = formData.policyAccepted;
 
 	setError(initialError);
@@ -70,7 +70,7 @@ export const isValidLogin = (
 ) => {
 	let isValid: boolean = true;
 	const email = formData.email.trim();
-	const password = formData.password.trim();
+	const password = formData.password?.trim() ?? "";
 
 	setError(initialError);
 
@@ -94,3 +94,9 @@ export const isValidLogin = (
 
 	return isValid;
 };
+
+// Note: The backend uses httpOnly cookies for security.
+// httpOnly cookies cannot be read by JavaScript (this prevents XSS attacks).
+// The browser automatically sends these cookies with every request when using
+// withCredentials: true in axios configuration.
+// Authentication state is managed by making API calls to verify the session.

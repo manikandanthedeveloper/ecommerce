@@ -1,15 +1,16 @@
-import { useState } from 'react'
-import type { MenuItem } from '../models/MenuItem'
+import { useMemo } from 'react'
 import { MdChevronRight, MdChevronLeft } from 'react-icons/md'
 import { getNavs } from '../navigation';
 import Navigation from './Navigation';
 import Footer from './UI/Footer';
+import { useAppSelector } from '../store/hooks';
 
 const Sidebar: React.FC<{ isCollapsed: boolean; setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>; sidebarRef: React.RefObject<HTMLDivElement> }> = ({ isCollapsed, setIsCollapsed, sidebarRef }) => {
-    const [menuItems] = useState<MenuItem[]>(() => getNavs('seller'));
+    const { role } = useAppSelector((state) => state.auth);
+    console.log('Sidebar role:', role);
+    const menuItems = useMemo(() => getNavs(role || ''), [role]);
 
     const handleNavigationClick = () => {
-        // Close sidebar on mobile after navigation
         if (window.innerWidth < 768) {
             setIsCollapsed(true);
         }

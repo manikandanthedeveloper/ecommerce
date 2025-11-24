@@ -6,9 +6,10 @@ import type { ErrorState } from "../../models/UserErrorState";
 import UserInput from "../../components/UI/UserInput";
 import Buttont from "../../components/UI/Buttont";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { sellerRegister, messageClear } from "../../store/reducers/authSlice";
+import { messageClear } from "../../store/reducers/authSlice";
 import { useAuthToast } from "../../hooks/useAuthToast";
 import { isValid } from "../../util/util";
+import { sellerRegister } from "../../store/auth/sellerRegisterThunks";
 
 const initialError: ErrorState = {
     name: "",
@@ -41,19 +42,20 @@ const Register = () => {
     const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
         if (!isValid(formData, setError, nameRef, emailRef, passwordRef, confirmPasswordRef, policyAcceptedRef, initialError)) return
-        dispatch(sellerRegister(formData))
-            .unwrap()
-            .then(() => {
-                setFormData(initialData);
-                dispatch(messageClear());
-            });
+        dispatch(sellerRegister({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password!
+        })).unwrap().then(() => {
+            setFormData(initialData);
+            dispatch(messageClear());
+        });
     }
 
     useAuthToast({
         errorMessage,
         successMessage,
         isAuthenticated,
-        redirectTo: successMessage ? '/login' : undefined,
     });
 
     return (

@@ -7,7 +7,6 @@ export const useAuthToast: (props: AuthToastProps) => void = ({
 	errorMessage,
 	successMessage,
 	isAuthenticated,
-	redirectTo,
 }) => {
 	const navigate = useNavigate();
 
@@ -22,8 +21,8 @@ export const useAuthToast: (props: AuthToastProps) => void = ({
 		if (successMessage) {
 			toast.success(successMessage);
 		}
-		if (isAuthenticated && redirectTo) {
-			navigate(redirectTo);
+		if (isAuthenticated) {
+			navigate("/");
 		}
-	}, [errorMessage, successMessage, isAuthenticated, redirectTo, navigate]);
+	}, [errorMessage, successMessage, isAuthenticated, navigate]);
 };

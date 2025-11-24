@@ -3,7 +3,6 @@ const responser = require("../utils/responser");
 
 const authMiddleware = async (req, res, next) => {
 	const { accessToken } = req.cookies;
-
 	if (!accessToken) {
 		return responser.responseError(
 			res,
@@ -16,11 +15,13 @@ const authMiddleware = async (req, res, next) => {
 				accessToken,
 				process.env.JWT_SECRET_KEY
 			);
+
 			req.id = decoded.id;
 			req.role = decoded.role;
+
 			next();
 		} catch (err) {
-			return responser.responseError(res, "Invalid token", 401);
+			return responser.responseError(res, `Invalid token: ${err}`, 401);
 		}
 	}
 };

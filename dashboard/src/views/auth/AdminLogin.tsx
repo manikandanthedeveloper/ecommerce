@@ -2,12 +2,13 @@ import { useRef, useState } from "react";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
 import UserInput from "../../components/UI/UserInput"
-import { adminLogin, messageClear } from "../../store/reducers/authSlice";
+import { messageClear } from "../../store/reducers/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import LogoImage from '../../../public/logo.svg';
 import Buttont from "../../components/UI/Buttont";
 import { useAuthToast } from "../../hooks/useAuthToast";
 import { isValidLogin } from "../../util/util";
+import { adminLogin as adminLoginThunk } from "../../store/auth/adminLoginThunks";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -37,7 +38,7 @@ const AdminLogin = () => {
         event.preventDefault();
         if (!isValidLogin(formData, setError, emailRef, passwordRef, initialError)) return;
 
-        dispatch(adminLogin({ email: formData.email, password: formData.password }))
+        dispatch(adminLoginThunk({ email: formData.email, password: formData.password }))
             .unwrap()
             .then(() => {
                 setFormData(initialData);
@@ -49,28 +50,7 @@ const AdminLogin = () => {
         errorMessage,
         successMessage,
         isAuthenticated,
-        redirectTo: isAuthenticated ? '/admin/dashboard' : undefined,
     });
-
-    // const isValid = () => {
-    //     let isValid: boolean = true;
-    //     const email = formData.email.trim();
-    //     const password = formData.password.trim();
-
-    //     setError(initialError);
-
-    //     if (email === "" || !email.includes('@') || !email.includes('.') || email.length < 7) {
-    //         setError((prevState) => ({ ...prevState, email: "Enter valid email" }));
-    //         emailRef.current?.focus();
-    //         isValid = false;
-    //     } else if (password === "" || password.length < 5) {
-    //         setError((prevState) => ({ ...prevState, password: "Enter valid password" }));
-    //         passwordRef.current?.focus();
-    //         isValid = false;
-    //     }
-
-    //     return isValid;
-    // }
 
     return (
         <div className='min-w-screen min-h-screen bg-[#ecebff] flex justify-center items-center overflow-hidden'>

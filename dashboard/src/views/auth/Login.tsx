@@ -4,11 +4,12 @@ import UserInput from "../../components/UI/UserInput"
 import { useRef, useState } from "react";
 import type { Login } from "../../models/Login";
 import type { LoginErrorState } from "../../models/LoginErrorState";
-import { messageClear, sellerLogin } from "../../store/reducers/authSlice";
+import { messageClear } from "../../store/reducers/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { isValidLogin } from "../../util/util";
 import { useAuthToast } from "../../hooks/useAuthToast";
 import Buttont from "../../components/UI/Buttont";
+import { sellerLogin } from "../../store/auth/sellerLoginThunks";
 
 const initialError: LoginErrorState = {
     email: "",
@@ -46,7 +47,6 @@ const Login = () => {
         errorMessage,
         successMessage,
         isAuthenticated,
-        redirectTo: isAuthenticated ? '/sellers/dashboard' : undefined,
     });
 
     return (
